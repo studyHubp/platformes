@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyHub - Your Ultimate Study Companion</title>
+   
+     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Video Storage Script -->
+    <script src="video-storage.js"></script>
+    <script>
+      // Function to play a video
+      function playVideo(videoElement, videoPath) {
+        if (!videoElement || !videoPath) return;
+        
+        if (videoPath.startsWith('local:')) {
+          // Handle local video playback
+          try {
+            const videoUrl = videoStorage.getVideoUrl(videoPath);
+            if (videoUrl) {
+              videoElement.src = videoUrl;
+              videoElement.load();
+              videoElement.play().catch(e => console.error('Error playing video:', e));
+            } else {
+              console.error('Video not found:', videoPath);
+            }
+          } catch (error) {
+            console.error('Error playing local video:', error);
+          }
+        } else {
+          // Handle external URLs (YouTube, Vimeo, etc.)
+          try {
+            videoElement.src = videoPath;
+            videoElement.load();
+            videoElement.play().catch(e => console.error('Error playing video:', e));
+          } catch (error) {
+            console.error('Error playing video:', error);
+          }
+        }
+      }
+      
+      // Function to initialize video players on the page
+      function initializeVideoPlayers() {
+        document.querySelectorAll('.video-player').forEach(player => {
+          const videoPath = player.getAttribute('data-video-path');
+          if (videoPath) {
+            playVideo(player, videoPath);
+          }
+        });
+      }
+      
+      // Initialize video players when the page loads
+      document.addEventListener('DOMContentLoaded', initializeVideoPlayers);
+    </script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="StudyHub_logo.jpg" alt="StudyHub Logo" class="logo-img">
+            <span>StudyHub</span>
+        </div>
+        <div class="hamburger" id="hamburger">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        <div class="nav-links" id="navLinks">
+            <a href="index.html">Home</a>
+            <a href="myaccount.html">MY ACCOUNT</a>
+            <a href="MCQ_.html">MCQS AI</a>
+            <a href="collaborate.html">Collaborate</a>
+            <a href="question_paper.html">Question Papers</a>
+            <a href="signup.html" id="authLink">Login / Signup</a>
+            <a href="StudyHub_AI.html">StudyHub AI</a>
+            <a href="about.html">About us</a>
+        </div>
+    </nav>
+    <script src="js/auth.js"></script>
+    <script>
+        // Update auth link text based on login status
+        document.addEventListener('DOMContentLoaded', function() {
+            const authLink = document.getElementById('authLink');
+            if (isAuthenticated()) {
+                authLink.textContent = 'Logout';
+                authLink.href = '#';
+                authLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    handleLogout();
+                });
+            } else {
+                authLink.textContent = 'Login / Signup';
+                authLink.href = 'signup.html';
+            }
+        });
+    </script>
+
+    <header class="hero">
+        <h1>Your Ultimate Study Companion</h1>
+        <p>Everything you need to excel in your studies, all in one place</p>
+      
+  
+    </header>
+
+    <main>
+        <section id="features">
+            <h2>Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>Create a Account</h3>
+                    <p>free access to all the resources for free</p>
+                  <h3>   <a href="myaccount.html">MY ACCOUNT</a> </h3>
+                </div>
+             
+                <div class="feature-card">
+                    <h3>Study Plans</h3>
+                    <p>Create personalized study schedules</p>
+                 <h3>  <a href="study_plan.html">Study Plans</a> </h3>
+                </div>
+                <div class="feature-card">
+                    <h3>Collaboration </h3>
+                    <p>Join study groups and share resources</p>
+                  <h3>   <a href="collaborate.html">Collaborate</a> </h3>
+                </div>
+                 <div class="feature-card">
+                    <h3>Question papers </h3>
+                    <p>See the pre question paper </p>
+                 <h3>  <a href="question_paper.html">Question Papers </a> </h3> 
+                </div>
+                 <div class="feature-card">
+                    <h3>MCQ Maker </h3>
+                    <p>You Can Make a MCQS Using Your ideas  </p>
+                 <h3>  <a href="MCQ_.html">MCQS Maker </a> </h3> 
+                </div>
+                 <div class="feature-card">
+                    <h3>StudyHub AI </h3>
+                    <p> Any dought ! ask here </p>
+                 <h3>  <a href="StudyHub_AI.html">StudyHub AI </a> </h3> 
+                </div>
+               
+            
+            </div>
+        </section>
+
+        <section id="why-us">
+            <h2>Why Choose StudyHub?</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <h3>Comprehensive Resources</h3>
+                    <p>Everything you need in one place</p>
+                </div>
+                <div class="benefit-card">
+                    <h3>Personalized Learning</h3>
+                    <p>Tailored to your study goals</p>
+                </div>
+                <div class="benefit-card">
+                    <h3>Interactive Learning</h3>
+                    <p>Engage with dynamic content</p>
+                </div>
+                <div class="benefit-card">
+                    <h3>Study Smarter</h3>
+                    <p>Study Smarter ! Not Harder</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+ 
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>StudyHub</h4>
+                <p>Your path to academic success</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="materials.html">Study Materials</a>
+                <a href="collaborate.html">Collaborate</a>
+                <a href="study_plan.html">Study Plans</a>
+                <a href="question_paper.html">Question Paper</a>
+                <a href="MCQ_.html">MCQ Maker</a>
+                <a href="StudyHub_AI.html">StudyHub AI</a>
+                <a href="about.html">About us</a>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>Email: studyHubplatform@gmail.com</p>
+                <p>Instagram : StudyHubplatform  </p>
+                <p> contact : 7020 054 592</p>
+                 
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 StudyHubplatform. All rights reserved.</p>
+             
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | StudyHub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* Notifications Styles */
+    .notifications-container {
+      background: white;
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .notifications-container h2 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .notifications-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .notification-item {
+      background: white;
+      padding: 1.25rem;
+      border-radius: 10px;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      animation: fadeIn 0.3s ease-in-out;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      border-left: 4px solid var(--primary);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .notification-item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .notification-icon {
+      background: rgba(108, 99, 255, 0.1);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .notification-icon i {
+      color: var(--primary);
+      font-size: 1.1rem;
+    }
+
+    .notification-content {
+      flex: 1;
+    }
+
+    .notification-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .notification-title {
+      font-weight: 600;
+      color: var(--dark);
+      font-size: 0.95rem;
+    }
+
+    .notification-time {
+      font-size: 0.75rem;
+      color: var(--gray);
+      background: var(--light-gray);
+      padding: 0.2rem 0.5rem;
+      border-radius: 12px;
+      font-weight: 500;
+    }
+
+    .notification-details {
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .user-details {
+      margin-bottom: 0.5rem;
+    }
+
+    .user-details strong {
+      color: var(--dark);
+      margin-right: 0.5rem;
+    }
+
+    .user-email {
+      color: var(--gray);
+      font-size: 0.85rem;
+      display: block;
+      margin: 0.2rem 0;
+    }
+
+    .user-join-date {
+      display: inline-block;
+      font-size: 0.8rem;
+      color: var(--success);
+      background: rgba(76, 175, 80, 0.1);
+      padding: 0.15rem 0.5rem;
+      border-radius: 10px;
+      margin-top: 0.3rem;
+    }
+
+    .batch-details {
+      color: var(--gray);
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .batch-details i {
+      color: var(--primary);
+      font-size: 0.9rem;
+      width: 16px;
+      text-align: center;
+    }
+
+    .separator {
+      color: #ddd;
+      font-weight: bold;
+    }
+
+    .notification-empty {
+      text-align: center;
+      color: var(--gray);
+      padding: 2rem 0;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    :root {
+      --primary: #6C63FF;
+      --primary-dark: #5549FF;
+      --secondary: #4CAF50;
+      --error: #ff3860;
+      --success: #09c372;
+      --text: #333;
+      --light-gray: #f5f5f5;
+      --border: #e0e0e0;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      --dark: #1A1A2E;
+      --gray: #6C757D;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: #f5f7fa;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .admin-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .admin-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .admin-header h1 {
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 2px solid #eee;
+      margin-bottom: 2rem;
+    }
+
+    .tab {
+      padding: 0.8rem 1.5rem;
+      cursor: pointer;
+      font-weight: 500;
+      color: var(--gray);
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .card-header h2 {
+      margin: 0;
+      color: var(--dark);
+      font-size: 1.5rem;
+    }
+
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-sm {
+      padding: 0.3rem 0.8rem;
+      font-size: 0.875rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--dark);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    .batch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .batch-card {
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .batch-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    .batch-header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 1.2rem;
+    }
+
+    .batch-body {
+      padding: 1.5rem;
+    }
+
+    .batch-info p {
+      margin: 0.5rem 0;
+      color: var(--gray);
+    }
+
+    .batch-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .video-list {
+      margin-top: 1.5rem;
+    }
+
+    .video-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.8rem;
+      border: 1px solid var(--light-gray);
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+    }
+
+    .video-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--light-gray);
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      color: var(--dark);
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--gray);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--gray);
+    }
+
+    @media (max-width: 768px) {
+      .batch-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .admin-header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .admin-header h1 {
+      font-size: 1.8rem;
+      font-weight: 600;
+    }
+
+    .admin-content {
+      padding: 30px;
+    }
+    
+    .stats-card {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 25px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .stats-card h3 {
+      color: #555;
+      margin: 0;
+      font-size: 1.1rem;
+    }
+    
+    .stats-card .count {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .welcome-section {
+      background: #f8f9ff;
+      padding: 30px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      border-left: 4px solid var(--primary);
+    }
+
+    .welcome-section h2 {
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    .user-details {
+      background: white;
+      border-radius: 10px;
+      padding: 25px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .user-details h3 {
+      color: var(--primary);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .detail-row {
+      display: flex;
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .detail-label {
+      width: 200px;
+      font-weight: 600;
+      color: #555;
+    }
+
+    .detail-value {
+      flex: 1;
+      color: #333;
+    }
+
+    .admin-actions {
+      margin-top: 30px;
+      display: flex;
+      gap: 15px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-danger {
+      background: #ff4d4f;
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .users-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    .users-table th,
+    .users-table td {
+      padding: 15px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+      vertical-align: middle;
+    }
+    
+    .users-table td.actions {
+      white-space: nowrap;
+    }
+    
+    .btn-sm {
+      padding: 5px 10px !important;
+      font-size: 0.8rem !important;
+    }
+    
+    .admin-badge {
+      background: var(--primary);
+      color: white;
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 10px;
+      margin-left: 5px;
+    }
+    
+    .status-badge {
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .status-active {
+      background-color: #e6f7e6;
+      color: var(--success);
+    }
+    
+    .status-inactive {
+      background-color: #fff2e8;
+      color: #fa8c16;
+    }
+
+    .users-table th {
+      background: #f8f9ff;
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .users-table tr:hover {
+      background: #f8f9ff;
+    }
+
+    @media (max-width: 768px) {
+      .admin-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+      }
+      
+      .detail-row {
+        flex-direction: column;
+        gap: 5px;
+      }
+      
+      .detail-label {
+        width: 100%;
+      }
+      
+      .admin-actions {
+        flex-direction: column;
+      }
+      
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="admin-container">
+    <div class="admin-header">
+      <h1>StudyHub Admin Dashboard</h1>
+      <p>Manage batches and content for your students</p>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" data-tab="batches">Batches</div>
+      <div class="tab" data-tab="analytics">Analytics</div>
+    </div>
+
+    <!-- Batches Tab -->
+    <div id="batchesTab" class="tab-content active">
+      <div class="card">
+        <div class="card-header">
+          <h2>Batches</h2>
+          <button id="createBatchBtn" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Create New Batch
+          </button>
+        </div>
+        <div id="batchesList">
+          <!-- Batches will be loaded here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Analytics Tab -->
+    <div id="analyticsTab" class="tab-content">
+      <div class="card">
+        <div class="card-header">
+          <h2>Analytics</h2>
+        </div>
+        <div class="card-body">
+          <p>Analytics dashboard coming soon.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create/Edit Batch Modal -->
+  <div id="batchModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modalTitle">Create New Batch</h2>
+        <button class="close-btn" id="closeModal">&times;</button>
+      </div>
+      <form id="batchForm">
+        <input type="hidden" id="batchId">
+        <div class="form-group">
+          <label for="schoolName">School Name</label>
+          <input type="text" id="schoolName" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="className">Class</label>
+          <input type="text" id="className" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="batchPassword">Batch Password</label>
+          <input type="text" id="batchPassword" class="form-control" required>
+        </div>
+        <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 1.5rem;">
+          <button type="button" id="cancelBatch" class="btn btn-outline">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Batch</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Video Modal -->
+  <div id="videoModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Add Video to Batch</h2>
+        <button class="close-btn" id="closeVideoModal">&times;</button>
+      </div>
+      <form id="videoForm">
+        <input type="hidden" id="currentBatchId">
+        <div class="form-group">
+          <label for="videoTitle">Video Title</label>
+          <input type="text" id="videoTitle" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>Video Source</label>
+          <div class="video-source-toggle" style="margin-bottom: 15px;">
+            <input type="radio" id="sourceUrl" name="videoSource" value="url" checked>
+            <label for="sourceUrl" style="margin-right: 15px;">YouTube/Vimeo URL</label>
+            <input type="radio" id="sourceLocal" name="videoSource" value="local">
+            <label for="sourceLocal">Local Video File</label>
+          </div>
+          <div id="urlInput" class="video-source-input">
+            <input type="url" id="videoUrl" class="form-control" placeholder="https://youtube.com/watch?v=..." required>
+          </div>
+          <div id="localInput" class="video-source-input" style="display: none;">
+            <div class="file-upload-area" style="border: 2px dashed #ccc; padding: 20px; text-align: center; border-radius: 8px; cursor: pointer;" id="dropZone">
+              <i class="fas fa-video" style="font-size: 2rem; color: #6C63FF; margin-bottom: 10px;"></i>
+              <p style="margin: 10px 0;">Click to select a video file</p>
+              <input type="file" id="videoFile" class="form-control" accept="video/*" style="display: none;">
+              <div id="selectedFileName" style="margin-top: 10px; font-style: italic; color: #666;">No file selected</div>
+              
+              <!-- Progress Bar Container -->
+              <div id="uploadProgressContainer" style="display: none; margin-top: 15px; width: 100%;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                  <span>Uploading...</span>
+                  <span id="uploadPercentage">0%</span>
+                </div>
+                <div style="width: 100%; height: 10px; background-color: #f0f0f0; border-radius: 5px; overflow: hidden;">
+                  <div id="uploadProgressBar" style="width: 0%; height: 100%; background-color: #6C63FF; transition: width 0.3s ease-in-out;"></div>
+                </div>
+                <div id="uploadSpeed" style="font-size: 12px; color: #666; margin-top: 5px;"></div>
+              </div>
+              
+              <!-- Processing Indicator -->
+              <div id="processingIndicator" style="display: none; margin-top: 15px; color: #6C63FF;">
+                <i class="fas fa-spinner fa-spin"></i> Processing video...
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="videoDescription">Description (Optional)</label>
+          <textarea id="videoDescription" class="form-control" rows="3"></textarea>
+        </div>
+        <div class="form-actions" style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 1rem;">
+          <button type="button" id="cancelVideo" class="btn btn-outline" onclick="closeModalFunc(document.getElementById('videoModal'))">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add Video</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Notifications Section -->
+  <div class="notifications-container">
+    <h2><i class="fas fa-bell"></i> Recent Activity</h2>
+    <div id="joinNotifications" class="notifications-list">
+      <!-- Notifications will be dynamically inserted here -->
+      <div class="notification-empty">No recent activity to display</div>
+    </div>
+  </div>
+
+  <div class="admin-container">
+    <div class="admin-header">
+      <h1><i class="fas fa-user-shield"></i> Admin Dashboard</h1>
+      <div class="admin-actions">
+        <button class="btn btn-secondary" onclick="window.location.href='index.html'">
+          <i class="fas fa-home"></i> Back to Home
+        </button>
+      </div>
+    </div>
+    
+    <div class="admin-content">
+      <div class="welcome-section">
+        <h2>Welcome, <span id="adminUsername">Admin</span>!</h2>
+        <p>You have full access to manage the StudyHub platform.</p>
+      </div>
+      
+      <div class="stats-card">
+        <h3>Total Users</h3>
+        <div class="count" id="user-count">0</div>
+      </div>
+      
+      <div class="user-details">
+        <h3><i class="fas fa-user-cog"></i> Admin Account Details</h3>
+        <div class="detail-row">
+          <div class="detail-label">Username:</div>
+          <div class="detail-value" id="detail-username">-</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Email:</div>
+          <div class="detail-value" id="detail-email">-</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Account Type:</div>
+          <div class="detail-value">Administrator</div>
+        </div>
+        <div class="detail-row">
+          <div class="detail-label">Registration Date:</div>
+          <div class="detail-value" id="registration-date">-</div>
+        </div>
+      </div>
+      
+      <div class="user-details" style="margin-top: 30px;">
+        <h3><i class="fas fa-users"></i> All Users</h3>
+        <table class="users-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Signup Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="users-list">
+            <!-- User rows will be added here dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Get user data from session storage
+    document.addEventListener('DOMContentLoaded', function() {
+      const userData = JSON.parse(sessionStorage.getItem('adminUserData'));
+      
+      if (userData) {
+        // Display admin user details
+        document.getElementById('adminUsername').textContent = userData.username;
+        document.getElementById('detail-username').textContent = userData.username;
+        document.getElementById('detail-email').textContent = userData.email;
+        
+        // Set registration date to current date
+        const now = new Date();
+        const options = { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        };
+        document.getElementById('registration-date').textContent = now.toLocaleDateString('en-US', options);
+        
+        // Load and display all users
+        displayAllUsers();
+      } else {
+        // If no admin data found, redirect to signup
+        window.location.href = 'signup.html';
+      }
+      
+      // Function to display all users
+      function displayAllUsers() {
+        const usersList = document.getElementById('users-list');
+        usersList.innerHTML = ''; // Clear existing rows
+        
+        // Get admin user from session storage
+        const adminUser = JSON.parse(sessionStorage.getItem('adminUserData'));
+        
+        // Add admin user to the list
+        if (adminUser) {
+          addUserToTable(usersList, {
+            id: 'admin',
+            username: adminUser.username,
+            email: adminUser.email,
+            isAdmin: true,
+            signupDate: new Date().toISOString()
+          }, 0);
+        }
+        
+        // Get all users from localStorage
+        const allUsers = JSON.parse(localStorage.getItem('allUsers') || '[]');
+        
+        // Add each user to the table
+        allUsers.forEach((user, index) => {
+          addUserToTable(usersList, user, index + 1);
+        });
+        
+        // Update user count
+        document.getElementById('user-count').textContent = allUsers.length + (adminUser ? 1 : 0);
+      }
+      
+      // Function to add a user to the table
+      function addUserToTable(container, user, index) {
+        const row = document.createElement('tr');
+        const signupDate = new Date(user.signupDate);
+        const formattedDate = signupDate.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+        
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>
+            ${user.username}
+            ${user.isAdmin ? ' <span class="admin-badge">Admin</span>' : ''}
+          </td>
+          <td>${user.email}</td>
+          <td>${formattedDate}</td>
+          <td>
+            <span class="status-badge ${user.isAdmin ? 'status-active' : 'status-inactive'}">
+              ${user.isAdmin ? 'Active' : 'Inactive'}
+            </span>
+          </td>
+          <td class="actions">
+            <button class="btn btn-primary btn-sm" onclick="editUser('${user.id}')">
+              <i class="fas fa-edit"></i> Edit
+            </button>
+            <button class="btn btn-danger btn-sm" onclick="deleteUser('${user.id}')" ${user.isAdmin ? 'disabled' : ''}>
+              <i class="fas fa-trash"></i> Delete
+            </button>
+          </td>
+        `;
+        container.appendChild(row);
+      }
+      
+      // Make functions available globally
+      window.editUser = function(userId) {
+        // In a real app, this would open an edit modal
+        alert('Edit user with ID: ' + userId);
+      };
+      
+      window.deleteUser = function(userId) {
+        if (confirm('Are you sure you want to delete this user?')) {
+          const users = JSON.parse(localStorage.getItem('allUsers') || '[]');
+          const updatedUsers = users.filter(user => user.id !== parseInt(userId));
+          localStorage.setItem('allUsers', JSON.stringify(updatedUsers));
+          displayAllUsers(); // Refresh the table
+        }
+      };
+    });
+  </script>
+
+  <script src="video-storage.js"></script>
+  <script>
+    // Function to format date to relative time (e.g., '2 minutes ago')
+    function formatRelativeTime(dateString) {
+      const date = new Date(dateString);
+      const now = new Date();
+      const seconds = Math.floor((now - date) / 1000);
+      
+      let interval = Math.floor(seconds / 31536000);
+      if (interval >= 1) return interval + ' year' + (interval === 1 ? '' : 's') + ' ago';
+      
+      interval = Math.floor(seconds / 2592000);
+      if (interval >= 1) return interval + ' month' + (interval === 1 ? '' : 's') + ' ago';
+      
+      interval = Math.floor(seconds / 86400);
+      if (interval >= 1) return interval + ' day' + (interval === 1 ? '' : 's') + ' ago';
+      
+      interval = Math.floor(seconds / 3600);
+      if (interval >= 1) return interval + ' hour' + (interval === 1 ? '' : 's') + ' ago';
+      
+      interval = Math.floor(seconds / 60);
+      if (interval >= 1) return interval + ' minute' + (interval === 1 ? '' : 's') + ' ago';
+      
+      return 'just now';
+    }
+
+    // Function to load and display join notifications
+    function loadJoinNotifications() {
+      const notificationsContainer = document.getElementById('joinNotifications');
+      if (!notificationsContainer) return;
+      
+      // Get notifications from localStorage
+      const notifications = JSON.parse(localStorage.getItem('studyhub_join_notifications') || '[]');
+      
+      if (notifications.length === 0) {
+        notificationsContainer.innerHTML = '<div class="notification-empty">No recent activity to display</div>';
+        return;
+      }
+      
+      // Clear existing notifications
+      notificationsContainer.innerHTML = '';
+      
+      // Add each notification to the container
+      notifications.forEach(notification => {
+        if (notification.type === 'join') {
+          const notificationElement = document.createElement('div');
+          notificationElement.className = 'notification-item';
+          
+          // Format the timestamps
+          const joinTime = new Date(notification.timestamp);
+          const userJoinTime = notification.user.joinDate ? new Date(notification.user.joinDate) : null;
+          
+          // Create notification content with user details
+          notificationElement.innerHTML = `
+            <div class="notification-icon">
+              <i class="fas fa-user-plus"></i>
+            </div>
+            <div class="notification-content">
+              <div class="notification-header">
+                <span class="notification-title">New Batch Join</span>
+                <span class="notification-time" title="${joinTime.toLocaleString()}">
+                  ${formatRelativeTime(notification.timestamp)}
+                </span>
+              </div>
+              <div class="notification-details">
+                <div class="user-details">
+                  <strong>${notification.user.username}</strong>
+                  <span class="user-email">${notification.user.email}</span>
+                  ${userJoinTime ? 
+                    `<span class="user-join-date" title="User since ${userJoinTime.toLocaleDateString()}">` + 
+                    `Member for ${formatRelativeTime(userJoinTime).replace(' ago', '')}</span>` : ''}
+                </div>
+                <div class="batch-details">
+                  <i class="fas fa-school"></i> ${notification.schoolName}
+                  <span class="separator">•</span>
+                  <i class="fas fa-users"></i> Class ${notification.className}
+                </div>
+              </div>
+            </div>
+          `;
+          
+          notificationsContainer.appendChild(notificationElement);
+        }
+      });
+    }
+    
+    // Load notifications when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      loadJoinNotifications();
+    });
+    // DOM Elements
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+    const batchForm = document.getElementById('batchForm');
+    const videoForm = document.getElementById('videoForm');
+    const batchModal = document.getElementById('batchModal');
+    const videoModal = document.getElementById('videoModal');
+    const createBatchBtn = document.getElementById('createBatchBtn');
+    const closeModal = document.getElementById('closeModal');
+    const closeVideoModal = document.getElementById('closeVideoModal');
+    const cancelBatch = document.getElementById('cancelBatch');
+    const cancelVideo = document.getElementById('cancelVideo');
+    const batchesList = document.getElementById('batchesList');
+
+    // State
+    let batches = JSON.parse(localStorage.getItem('studyhub_batches') || '[]');
+    let currentBatchId = null;
+
+    // Tab switching
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const tabId = tab.getAttribute('data-tab');
+        
+        // Update active tab
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        
+        // Show corresponding content
+        tabContents.forEach(content => {
+          content.classList.remove('active');
+          if (content.id === `${tabId}Tab`) {
+            content.classList.add('active');
+          }
+        });
+      });
+    });
+
+    // Modal functions
+    function openModal(modal) {
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModalFunc(modal) {
+      modal.style.display = 'none';
+      document.body.style.overflow = 'auto';
+    }
+
+    // Event Listeners for modals
+    createBatchBtn.addEventListener('click', () => {
+      document.getElementById('modalTitle').textContent = 'Create New Batch';
+      document.getElementById('batchForm').reset();
+      currentBatchId = null;
+      openModal(batchModal);
+    });
+
+    closeModal.addEventListener('click', () => closeModalFunc(batchModal));
+    closeVideoModal.addEventListener('click', () => closeModalFunc(videoModal));
+    cancelBatch.addEventListener('click', () => closeModalFunc(batchModal));
+    cancelVideo.addEventListener('click', () => closeModalFunc(videoModal));
+
+    // Close modal when clicking outside
+    window.addEventListener('click', (e) => {
+      if (e.target === batchModal) closeModalFunc(batchModal);
+      if (e.target === videoModal) closeModalFunc(videoModal);
+    });
+
+    // Save batch
+    batchForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const batchData = {
+        id: currentBatchId || Date.now().toString(),
+        schoolName: document.getElementById('schoolName').value,
+        className: document.getElementById('className').value,
+        password: document.getElementById('batchPassword').value,
+        videos: [],
+        createdAt: new Date().toISOString()
+      };
+
+      if (currentBatchId) {
+        // Update existing batch
+        const index = batches.findIndex(b => b.id === currentBatchId);
+        if (index !== -1) {
+          batchData.videos = batches[index].videos || [];
+          batches[index] = batchData;
+        }
+      } else {
+        // Add new batch
+        batches.push(batchData);
+      }
+
+      // Save to localStorage
+      localStorage.setItem('studyhub_batches', JSON.stringify(batches));
+      
+      // Refresh the batches list
+      renderBatches();
+      closeModalFunc(batchModal);
+    });
+
+    // Toggle between URL and local file
+    document.querySelectorAll('input[name="videoSource"]').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        const sourceType = e.target.value;
+        document.getElementById('urlInput').style.display = sourceType === 'url' ? 'block' : 'none';
+        document.getElementById('localInput').style.display = sourceType === 'local' ? 'block' : 'none';
+        
+        // Update required attribute
+        document.getElementById('videoUrl').required = sourceType === 'url';
+        document.getElementById('videoFile').required = sourceType === 'local';
+      });
+    });
+    
+    // Make the drop zone clickable
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('videoFile');
+    const fileNameDisplay = document.getElementById('selectedFileName');
+    
+    dropZone.addEventListener('click', () => {
+      fileInput.click();
+    });
+    
+    // Handle file selection
+    fileInput.addEventListener('change', function(e) {
+      if (this.files && this.files[0]) {
+        const file = this.files[0];
+        fileNameDisplay.textContent = `Selected: ${file.name} (${formatFileSize(file.size)})`;
+        fileNameDisplay.style.color = '#28a745'; // Green color for success
+      }
+    });
+    
+    // Add drag and drop support
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, preventDefaults, false);
+    });
+    
+    function preventDefaults(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropZone.addEventListener(eventName, highlight, false);
+    });
+    
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, unhighlight, false);
+    });
+    
+    function highlight() {
+      dropZone.style.borderColor = '#6C63FF';
+      dropZone.style.backgroundColor = 'rgba(108, 99, 255, 0.1)';
+    }
+    
+    function unhighlight() {
+      dropZone.style.borderColor = '#ccc';
+      dropZone.style.backgroundColor = '';
+    }
+    
+    // Handle dropped files
+    dropZone.addEventListener('drop', handleDrop, false);
+    
+    function handleDrop(e) {
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      
+      if (files.length) {
+        fileInput.files = files;
+        const file = files[0];
+        fileNameDisplay.textContent = `Selected: ${file.name} (${formatFileSize(file.size)})`;
+        fileNameDisplay.style.color = '#28a745'; // Green color for success
+      }
+    }
+
+    // Function to handle video file upload
+    async function handleVideoUpload(file) {
+      try {
+        // Show processing status
+        const progressBar = document.getElementById('uploadProgressBar');
+        const uploadPercentage = document.getElementById('uploadPercentage');
+        const uploadSpeed = document.getElementById('uploadSpeed');
+        
+        progressBar.style.width = '50%';
+        uploadPercentage.textContent = '50%';
+        uploadSpeed.textContent = 'Saving video...';
+        
+        // Save video using our video storage module
+        const savedVideo = await videoStorage.saveVideo(file);
+        
+        // Update progress
+        progressBar.style.width = '100%';
+        uploadPercentage.textContent = '100%';
+        uploadSpeed.textContent = 'Processing complete';
+        
+        // Return video data with proper format for storage
+        return {
+          id: 'vid_' + Date.now(),
+          title: file.name.replace(/\.[^/.]+$/, ''), // Remove file extension for title
+          description: document.getElementById('videoDescription').value || '',
+          type: 'local',
+          url: 'local:' + savedVideo.id, // This will be in the format 'local:videoId'
+          size: file.size,
+          addedAt: new Date().toISOString(),
+          // Add additional metadata for better display
+          fileName: file.name,
+          fileSize: formatFileSize(file.size)
+        };
+      } catch (error) {
+        console.error('Error uploading video:', error);
+        throw new Error('Failed to upload video: ' + error.message);
+      }
+    }
+    
+    // Function to add video to batch
+    async function addVideoToBatch(videoData) {
+      return new Promise((resolve) => {
+        const batchIndex = batches.findIndex(b => b.id === currentBatchId);
+        if (batchIndex !== -1) {
+          if (!batches[batchIndex].videos) {
+            batches[batchIndex].videos = [];
+          }
+          
+          // Add video to the batch
+          batches[batchIndex].videos.push(videoData);
+          
+          // Save to localStorage
+          try {
+            localStorage.setItem('studyhub_batches', JSON.stringify(batches));
+            renderBatches();
+            resolve(true);
+          } catch (error) {
+            console.error('Error saving video to batch:', error);
+            alert('Error saving video. The video might be too large for local storage.');
+            resolve(false);
+          }
+        } else {
+          console.error('Batch not found');
+          resolve(false);
+        }
+      });
+    }
+    
+    // Function to handle video file upload
+    async function handleVideoUpload(file) {
+      return new Promise((resolve, reject) => {
+        try {
+          // Show processing UI
+          const progressContainer = document.getElementById('uploadProgressContainer');
+          const progressBar = document.getElementById('uploadProgressBar');
+          const uploadPercentage = document.getElementById('uploadPercentage');
+          const uploadSpeed = document.getElementById('uploadSpeed');
+          const processingIndicator = document.getElementById('processingIndicator');
+          
+          // Show progress UI
+          progressContainer.style.display = 'block';
+          processingIndicator.style.display = 'block';
+          progressBar.style.width = '0%';
+          uploadPercentage.textContent = '0%';
+          uploadSpeed.textContent = 'Starting upload...';
+          
+          // Create a FileReader to read the file
+          const reader = new FileReader();
+          
+          reader.onload = async function(e) {
+            try {
+              // Update progress
+              progressBar.style.width = '50%';
+              uploadPercentage.textContent = '50%';
+              uploadSpeed.textContent = 'Processing video...';
+              
+              // Save video using video storage
+              const savedVideo = await videoStorage.saveVideo(file);
+              
+              // Complete progress
+              progressBar.style.width = '100%';
+              uploadPercentage.textContent = '100%';
+              uploadSpeed.textContent = 'Processing complete';
+              
+              // Return video data
+              resolve({
+                id: savedVideo.id,
+                title: document.getElementById('videoTitle').value || file.name.replace(/\.[^/.]+$/, ''),
+                description: document.getElementById('videoDescription').value || '',
+                type: 'local',
+                url: savedVideo.path,
+                size: file.size,
+                addedAt: new Date().toISOString()
+              });
+            } catch (error) {
+              console.error('Error processing video:', error);
+              reject(new Error('Failed to process video: ' + error.message));
+            }
+          };
+          
+          reader.onerror = (error) => {
+            console.error('Error reading file:', error);
+            reject(new Error('Failed to read video file'));
+          };
+          
+          // Start reading the file
+          reader.readAsDataURL(file);
+          
+        } catch (error) {
+          console.error('Error in handleVideoUpload:', error);
+          reject(error);
+        }
+      });
+    }
+    
+    // Handle video form submission
+    videoForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const title = document.getElementById('videoTitle').value;
+      const description = document.getElementById('videoDescription').value;
+      const sourceType = document.querySelector('input[name="videoSource"]:checked').value;
+      
+      // Show loading state
+      const submitBtn = videoForm.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+      
+      try {
+        let videoData;
+        
+        if (sourceType === 'url') {
+          // Handle URL input
+          const url = document.getElementById('videoUrl').value;
+          
+          // Validate URL format
+          if (!isValidVideoUrl(url)) {
+            throw new Error('Please enter a valid YouTube or Vimeo URL');
+          }
+          
+          videoData = {
+            id: 'vid_' + Date.now(),
+            title: title,
+            description: description,
+            type: 'url',
+            url: url,
+            addedAt: new Date().toISOString()
+          };
+        } else {
+          // Handle local file upload
+          const fileInput = document.getElementById('videoFile');
+          
+          if (!fileInput.files || fileInput.files.length === 0) {
+            throw new Error('Please select a video file');
+          }
+          
+          const file = fileInput.files[0];
+          
+          // Validate file type
+          if (!file.type.startsWith('video/')) {
+            throw new Error('Please select a valid video file');
+          }
+          
+          // Process and upload the video file
+          videoData = await handleVideoUpload(file);
+        }
+        
+        // Add video to batch
+        const success = await addVideoToBatch(videoData);
+        if (!success) {
+          throw new Error('Failed to add video to batch');
+        }
+        
+        // Reset form on success
+        videoForm.reset();
+        document.getElementById('selectedFileName').textContent = 'No file selected';
+        document.getElementById('selectedFileName').style.color = '';
+        
+        // Close modal after a short delay
+        setTimeout(() => {
+          closeModalFunc(document.getElementById('videoModal'));
+        }, 1000);
+        
+      } catch (error) {
+        console.error('Error adding video:', error);
+        alert('Error: ' + error.message);
+      } finally {
+        // Reset button state
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Add Video';
+      }
+    });
+    
+    // Helper function to validate video URLs
+    function isValidVideoUrl(url) {
+      try {
+        const urlObj = new URL(url);
+        const hostname = urlObj.hostname;
+        
+        // Check for YouTube URLs
+        if (hostname.includes('youtube.com') || hostname.includes('youtu.be')) {
+          return true;
+        }
+        
+        // Check for Vimeo URLs
+        if (hostname.includes('vimeo.com')) {
+          return true;
+        }
+        
+        return false;
+      } catch (e) {
+        return false;
+      }
+    }
+    
+    // Helper function to format file size
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // Render batches list
+    function renderBatches() {
+      if (batches.length === 0) {
+        batchesList.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem; color: #ccc;"></i>
+            <h3>No batches created yet</h3>
+            <p>Click the "Create New Batch" button to get started.</p>
+          </div>
+        `;
+        return;
+      }
+
+      batchesList.innerHTML = batches.map(batch => `
+        <div class="batch-card">
+          <div class="batch-header">
+            <h3>${batch.schoolName}</h3>
+            <p>Class ${batch.className}</p>
+          </div>
+          <div class="batch-body">
+            <div class="batch-info">
+              <p><i class="fas fa-key"></i> Password: ${batch.password}</p>
+              <p><i class="fas fa-video"></i> ${batch.videos ? batch.videos.length : 0} Videos</p>
+              <p><i class="far fa-calendar-alt"></i> Created: ${new Date(batch.createdAt).toLocaleDateString()}</p>
+            </div>
+            <div class="batch-actions">
+              <button class="btn btn-sm btn-primary" onclick="editBatch('${batch.id}')">
+                <i class="fas fa-edit"></i> Edit
+              </button>
+              <button class="btn btn-sm btn-success" onclick="addVideo('${batch.id}')">
+                <i class="fas fa-plus"></i> Add Video
+              </button>
+              <button class="btn btn-sm btn-danger" onclick="deleteBatch('${batch.id}')">
+                <i class="fas fa-trash"></i> Delete
+              </button>
+            </div>
+            ${batch.videos && batch.videos.length > 0 ? `
+              <div class="video-list">
+                <h4>Videos</h4>
+                ${batch.videos.map(video => `
+                  <div class="video-item">
+                    <span>${video.title}</span>
+                    <div class="video-actions">
+                      <button class="btn btn-sm" onclick="deleteVideo('${batch.id}', '${video.id}')">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Global functions for batch operations
+    window.editBatch = (batchId) => {
+      const batch = batches.find(b => b.id === batchId);
+      if (batch) {
+        document.getElementById('modalTitle').textContent = 'Edit Batch';
+        document.getElementById('batchId').value = batch.id;
+        document.getElementById('schoolName').value = batch.schoolName;
+        document.getElementById('className').value = batch.className;
+        document.getElementById('batchPassword').value = batch.password;
+        currentBatchId = batchId;
+        openModal(batchModal);
+      }
+    };
+
+    window.addVideo = (batchId) => {
+      currentBatchId = batchId;
+      videoForm.reset();
+      openModal(videoModal);
+    };
+
+    window.deleteBatch = (batchId) => {
+      if (confirm('Are you sure you want to delete this batch? This action cannot be undone.')) {
+        batches = batches.filter(b => b.id !== batchId);
+        localStorage.setItem('studyhub_batches', JSON.stringify(batches));
+        renderBatches();
+      }
+    };
+
+    window.deleteVideo = (batchId, videoId) => {
+      if (confirm('Are you sure you want to delete this video?')) {
+        const batchIndex = batches.findIndex(b => b.id === batchId);
+        if (batchIndex !== -1 && batches[batchIndex].videos) {
+          batches[batchIndex].videos = batches[batchIndex].videos.filter(v => v.id !== videoId);
+          localStorage.setItem('studyhub_batches', JSON.stringify(batches));
+          renderBatches();
+        }
+      }
+    };
+
+    // Initialize video source toggle
+    const sourceUrl = document.getElementById('sourceUrl');
+    const sourceLocal = document.getElementById('sourceLocal');
+    const urlInput = document.getElementById('urlInput');
+    const localInput = document.getElementById('localInput');
+    const videoFileInput = document.getElementById('videoFile');
+    const selectedFileName = document.getElementById('selectedFileName');
+    
+    // Toggle between URL and local file input
+    if (sourceUrl && sourceLocal && urlInput && localInput) {
+      sourceUrl.addEventListener('change', () => {
+        urlInput.style.display = 'block';
+        localInput.style.display = 'none';
+        if (videoFileInput) videoFileInput.required = false;
+      });
+      
+      sourceLocal.addEventListener('change', () => {
+        urlInput.style.display = 'none';
+        localInput.style.display = 'block';
+        if (videoFileInput) videoFileInput.required = true;
+      });
+    }
+    
+    // Handle file selection
+    if (videoFileInput && selectedFileName) {
+      videoFileInput.addEventListener('change', () => {
+        if (videoFileInput.files.length > 0) {
+          selectedFileName.textContent = videoFileInput.files[0].name;
+          selectedFileName.style.color = '#333';
+        } else {
+          selectedFileName.textContent = 'No file selected';
+          selectedFileName.style.color = '';
+        }
+      });
+    }
+    
+    // Close modal handlers
+    if (closeVideoModal) {
+      closeVideoModal.addEventListener('click', () => closeModalFunc(videoModal));
+    }
+    
+    if (cancelVideo) {
+      cancelVideo.addEventListener('click', () => closeModalFunc(videoModal));
+    }
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      renderBatches();
+      // Set default to URL input
+      if (sourceUrl && urlInput && localInput) {
+        sourceUrl.checked = true;
+        urlInput.style.display = 'block';
+        localInput.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

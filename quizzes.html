@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>10th SSC Math Quizzes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+
+    header {
+      background-color: #0077cc;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h2 {
+      margin-top: 30px;
+      color: #333;
+    }
+
+    .formula-section, .quiz-section {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+
+    .quiz {
+      margin-bottom: 15px;
+    }
+
+    .quiz button {
+      margin-top: 10px;
+      padding: 5px 10px;
+      background-color: #28a745;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .quiz button:hover {
+      background-color: #218838;
+    }
+
+    .answer {
+      display: none;
+      margin-top: 5px;
+      color: #555;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    /* Back Button Styles */
+    .back-button-container {
+      max-width: 1200px;
+      margin: 20px auto 0;
+      padding: 0 20px;
+    }
+    
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 16px;
+      background-color: #6C63FF;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+      font-weight: 500;
+      transition: background-color 0.3s ease;
+      margin-bottom: 20px;
+    }
+    
+    .back-button:hover {
+      background-color: #5549FF;
+      color: white;
+      text-decoration: none;
+    }
+    
+    .back-button i {
+      margin-right: 8px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>10th SSC Math - Quizzes & Formulas</h1>
+  </header>
+
+  <!-- Formula Section -->
+  <div class="formula-section">
+    <h2>Math Formulas - Part 1</h2>
+    <ul>
+      <li>Area of Triangle = 1/2 × base × height</li>
+      <li>Linear Equations: ax + b = 0</li>
+      <li>Midpoint Formula: M = (x₁+x₂)/2 , (y₁+y₂)/2</li>
+   
+    </ul>
+
+    <h2>Math Formulas - Part 2</h2>
+    <ul>
+     <h4>1. leasson ~ crice </h4>
+      
+     <li>1  leasson </li>
+      <li> Volume of Cylinder = πr²h</li>
+      <li> Surface Area of Sphere = 4πr²</li>
+      <li>Quadratic Formula: x = (-b ± √(b² - 4ac)) / 2a</li>
+      <!-- Add more Part 2 formulas here -->
+    </ul>
+  </div>
+
+  <!-- Quizzes Section -->
+  <div class="quiz-section">
+    <h2>Practice Quizzes</h2>
+    <!-- Back Button -->
+    <div class="back-button-container">
+        <a href="index.html" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+    </div>
+    <div class="quiz">
+      <strong>Q1: What is the area of a triangle with base 10 cm and height 5 cm?</strong><br />
+      <button onclick="showAnswer(this)">Show Answer</button>
+      <div class="answer">Area = 1/2 × 10 × 5 = <strong>25 cm²</strong></div>
+    </div>
+
+    <div class="quiz">
+      <strong>Q2: Solve: 2x + 4 = 10</strong><br />
+      <button onclick="showAnswer(this)">Show Answer</button>
+      <div class="answer">2x = 6 → x = <strong>3</strong></div>
+    </div>
+
+    <div class="quiz">
+      <strong>Q3: Find the volume of a cylinder with r=3 cm and h=7 cm</strong><br />
+      <button onclick="showAnswer(this)">Show Answer</button>
+      <div class="answer">Volume = π × 3² × 7 = <strong>~197.92 cm³</strong></div>
+    </div>
+
+    <!-- Add more quizzes below in similar format -->
+  </div>
+
+  <script>
+    function showAnswer(button) {
+      const answerDiv = button.nextElementSibling;
+      answerDiv.style.display = answerDiv.style.display === "block" ? "none" : "block";
+    }
+  </script>
+</body>
+</html>

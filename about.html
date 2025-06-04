@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About StudyHub - Empowering Education</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361EE;
+            --primary-dark: #3A0CA3;
+            --accent: #F72585;
+            --dark: #1A1A2E;
+            --light: #F8F9FA;
+            --gray: #6C757D;
+            --gradient: linear-gradient(135deg, #4361EE 0%, #3A0CA3 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: var(--gradient);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateX(-3px);
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 4rem 0;
+        }
+
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        h1, h2, h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            color: var(--dark);
+            font-size: 1.05rem;
+            line-height: 1.8;
+        }
+
+        .highlight {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Founder Section */
+        .founder-section {
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+        }
+
+        .founder-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .founder-card {
+            display: flex;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .founder-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .founder-image {
+            flex: 0 0 300px;
+            background: linear-gradient(135deg, #4361EE 0%, #3A0CA3 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-placeholder i {
+            font-size: 6rem;
+            color: white;
+            opacity: 0.2;
+        }
+
+        .founder-content {
+            flex: 1;
+            padding: 3rem;
+            position: relative;
+        }
+
+        .founder-header h3 {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .founder-title {
+            font-size: 1.1rem;
+            color: var(--accent);
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .divider {
+            width: 60px;
+            height: 3px;
+            background: var(--gradient);
+            margin: 1.5rem 0;
+            border-radius: 3px;
+        }
+
+        .founder-bio {
+            margin-bottom: 2rem;
+        }
+
+        .founder-bio p {
+            color: var(--dark);
+            line-height: 1.8;
+            margin-bottom: 1.2rem;
+        }
+
+        .founder-contact {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #f8f9ff;
+            border-radius: 10px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .contact-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .contact-item i {
+            width: 30px;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .social-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .linkedin { background-color: #0077B5; }
+        .twitter { background-color: #1DA1F2; }
+        .github { background-color: #333; }
+        .instagram { background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D); }
+
+        .social-links {
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: var(--primary);
+            margin-right: 1rem;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--accent);
+        }
+
+        /* Features */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature {
+            padding: 1.5rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 992px) {
+            .founder-card {
+                flex-direction: column;
+            }
+
+            .founder-image {
+                flex: 0 0 200px;
+                border-radius: 0;
+            }
+
+            .founder-content {
+                padding: 2rem;
+            }
+
+            .founder-header {
+                text-align: center;
+            }
+
+            .divider {
+                margin: 1.5rem auto;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .founder-content {
+                padding: 1.5rem;
+            }
+
+            .founder-header h3 {
+                font-size: 1.6rem;
+            }
+
+            .founder-title {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+            <div class="logo">StudyHub</div>
+            <p>Empowering Education Through Technology</p>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <div class="container">
+            <section class="section">
+                <h1>Welcome to StudyHub</h1>
+                <p>StudyHub is a revolutionary online learning platform designed to transform the way students and educators interact with educational content. Our mission is to make quality education accessible to everyone, everywhere.</p>
+                <p>With a focus on <span class="highlight">interactive learning</span>, <span class="highlight">collaboration</span>, and <span class="highlight">personalized education</span>, StudyHub provides a comprehensive ecosystem for students, teachers, and educational institutions to connect, share knowledge, and achieve academic excellence.</p>
+            </section>
+
+            <section class="section">
+                <h2>Our Vision</h2>
+                <p>We envision a world where education knows no boundaries. StudyHub breaks down geographical and financial barriers to education, providing a platform where learners can access high-quality educational resources, connect with expert educators, and collaborate with peers from around the globe.</p>
+                <p>Our platform leverages cutting-edge technology to create an immersive and engaging learning experience that adapts to individual learning styles and paces.</p>
+            </section>
+
+            <section class="section">
+                <h2>Key Features</h2>
+                <div class="features">
+                    <div class="feature">
+                        <i class="fas fa-laptop"></i>
+                        <h3>Interactive Learning</h3>
+                        <p>Engage with interactive video lessons, quizzes, and assignments that make learning fun and effective.</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-users"></i>
+                        <h3>Collaborative Tools</h3>
+                        <p>Connect with classmates and teachers through discussion forums, group projects, and live sessions.</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Progress Tracking</h3>
+                        <p>Monitor your learning journey with detailed analytics and personalized recommendations.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section founder-section">
+                <h2>Meet Our Founder</h2>
+                <div class="founder-container">
+                    <div class="founder-card">
+                        <div class="founder-image">
+                            <div class="image-placeholder">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                        </div>
+                        <div class="founder-content">
+                            <div class="founder-header">
+                                <h3>Mayur Thete</h3>
+                                <span class="founder-title">Founder & CEO</span>
+                                <div class="divider"></div>
+                            </div>
+                            <div class="founder-bio">
+                                <p>Mayur Thete is a visionary entrepreneur and education enthusiast with a passion for leveraging technology to transform education. With years of experience in the ed-tech industry, Mayur founded StudyHub with the goal of creating a platform that makes quality education accessible to all.</p>
+                                <p>His innovative approach to online learning and commitment to educational excellence has positioned StudyHub as a leader in the ed-tech space.</p>
+                            </div>
+                            <div class="founder-contact">
+                                <div class="contact-item">
+                                    <i class="fas fa-envelope"></i>
+                                    <span>studyhubplatform@gmail.com</span>
+                                </div>
+                                <div class="contact-item">
+                                    <i class="fas fa-phone"></i>
+                                    <span>+91 7020054592 </span>
+                                </div>
+                            </div>
+                            <div class="social-links">
+                                <a href="#" class="social-link linkedin" target="_blank">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                                <a href="#" class="social-link twitter" target="_blank">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+                                <a href="#" class="social-link github" target="_blank">
+                                    <i class="fab fa-github"></i>
+                                </a>
+                                <a href="https://www.instagram.com/studyhubplatform?igsh=MWJ1a294dHB5dHR2OA==" class="social-link instagram" target="_blank">
+                                    <i class="fab fa-instagram"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            </section>
+
+            <section class="section">
+                <h2>Our Mission</h2>
+                <p>At StudyHub, we believe that education is the most powerful tool for personal and societal transformation. Our mission is to:</p>
+                <ul style="margin-left: 2rem; margin-bottom: 1.5rem;">
+                    <li>Make quality education accessible to learners worldwide</li>
+                    <li>Empower educators with innovative teaching tools</li>
+                    <li>Foster a global community of lifelong learners</li>
+                    <li>Bridge the gap between traditional and digital education</li>
+                </ul>
+                <p>Join us in our mission to revolutionize education and create a brighter future for learners everywhere.</p>
+            </section>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 StudyHub. All rights reserved.</p>
+            <p>Empowering the next generation of learners.</p>
+        </div>
+    </footer>
+</body>
+</html>

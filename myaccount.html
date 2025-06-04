@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Account | StudyHub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary: #6C63FF;
+      --primary-dark: #5549FF;
+      --primary-light: #8E85FF;
+      --secondary: #4CAF50;
+      --text: #2D3748;
+      --text-light: #718096;
+      --light-gray: #F7FAFC;
+      --border: #E2E8F0;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 15px rgba(0, 0, 0, 0.05);
+      --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #F8F9FA;
+      min-height: 100vh;
+      padding: 0;
+      margin: 0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+      border: 1px solid var(--border);
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        margin: 0;
+        border-radius: 0;
+      }
+      .header {
+        text-align: center;
+        padding: 2rem 1.5rem;
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        color: white;
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      right: -50%;
+      bottom: -50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+      transform: rotate(30deg);
+    }
+
+    .header h1 {
+      margin: 0 0 0.5rem 0;
+      font-size: 2.2rem;
+      font-weight: 700;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .header p {
+      margin: 0;
+      font-size: 1.1rem;
+      opacity: 0.9;
+      position: relative;
+      z-index: 1;
+    }
+
+    .home-btn {
+      position: absolute;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: var(--transition);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .home-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-50%) translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .home-btn i {
+      font-size: 0.9rem;
+    }
+
+    .account-content {
+      padding: 2.5rem;
+    }
+
+    .user-info {
+      background: var(--light-gray);
+      padding: 2rem;
+      border-radius: 10px;
+      margin-bottom: 2rem;
+      border: 1px solid var(--border);
+      transition: var(--transition);
+    }
+    
+    .user-info:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--card-shadow);
+    }
+
+    .info-item {
+      margin-bottom: 1.25rem;
+      padding: 0.75rem 1rem;
+      background: white;
+      border-radius: 8px;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      box-shadow: var(--card-shadow);
+      transition: var(--transition);
+    }
+    
+    .info-item:hover {
+      transform: translateX(5px);
+    }
+
+    .info-item i {
+      width: 36px;
+      height: 36px;
+      background: rgba(108, 99, 255, 0.1);
+      color: var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 1rem;
+      flex-shrink: 0;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(108, 99, 255, 0.2);
+    }
+    
+    .btn i {
+      transition: transform 0.2s ease;
+    }
+    
+    .btn:hover i {
+      transform: translateX(3px);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--primary-dark);
+      opacity: 0;
+      z-index: -1;
+      transition: opacity 0.3s ease;
+    }
+    
+    .btn-primary:hover::after {
+      opacity: 1;
+    }
+
+    .btn-outline {
+      background: white;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    .btn-outline::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--primary);
+      opacity: 0;
+      z-index: -1;
+      transition: opacity 0.3s ease;
+    }
+    
+    .btn-outline:hover {
+      color: white;
+      border-color: var(--primary);
+    }
+    
+    .btn-outline:hover::after {
+      opacity: 1;
+    }
+
+    .btn i {
+      margin-right: 8px;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .not-logged-in {
+      text-align: center;
+      padding: 3rem 1.5rem;
+      animation: fadeIn 0.5s ease-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .not-logged-in h2 {
+      margin-bottom: 1rem;
+      color: var(--text);
+      font-size: 1.75rem;
+      font-weight: 700;
+    }
+    
+    .not-logged-in p {
+      color: var(--text-light);
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+    }
+    
+    /* Loading animation */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    .loading {
+      display: flex;
+      justify-content: center;
+      padding: 2rem;
+    }
+    
+    .loading-dot {
+      width: 10px;
+      height: 10px;
+      margin: 0 5px;
+      background-color: var(--primary);
+      border-radius: 50%;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    
+    .loading-dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    
+    .loading-dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>My Account</h1>
+      <p>Welcome back to your StudyHub dashboard</p>
+      <a href="index.html" class="home-btn">
+        <i class="fas fa-home"></i> Home
+      </a>
+      <p> </p>
+    </div>
+    
+    <div class="account-content" id="accountContent">
+      <div class="loading" id="loadingIndicator">
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+      </div>
+      <!-- Content will be populated by JavaScript -->
+    </div>
+  </div>
+
+  <script>
+    function renderAccountContent(user) {
+      const loadingIndicator = document.getElementById('loadingIndicator');
+      const accountContent = document.getElementById('accountContent');
+      
+      // Hide loading indicator
+      if (loadingIndicator) loadingIndicator.style.display = 'none';
+      
+      if (user) {
+        // Format the signup date
+        const signupDate = new Date(user.signupDate || new Date());
+        const formattedDate = signupDate.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+        
+        // Create user info HTML
+        const userInfoHTML = `
+          <div class="user-info">
+            <div class="info-item">
+              <i class="fas fa-user"></i>
+              <span><strong>Username:</strong> ${user.username}</span>
+            </div>
+            <div class="info-item">
+              <i class="fas fa-envelope"></i>
+              <span><strong>Email:</strong> ${user.email}</span>
+            </div>
+            <div class="info-item">
+              <i class="fas fa-user-shield"></i>
+              <span><strong>Account Type:</strong> ${user.isAdmin ? 'Administrator' : 'Standard User'}</span>
+            </div>
+            <div class="info-item">
+              <i class="fas fa-calendar-alt"></i>
+              <span><strong>Member Since:</strong> ${formattedDate}</span>
+            </div>
+          </div>
+          <div class="actions">
+            <a href="index.html" class="btn btn-primary">
+              <i class="fas fa-home"></i> Back to Home
+            </a>
+            ${user.isAdmin ? `
+              <a href="admin.html" class="btn btn-outline">
+                <i class="fas fa-tachometer-alt"></i> Admin Dashboard
+              </a>
+            ` : ''}
+            <button id="signOutBtn" class="btn btn-outline">
+              <i class="fas fa-sign-out-alt"></i> Sign Out
+            </button>
+          </div>
+        `;
+        
+        accountContent.innerHTML = userInfoHTML;
+      } else {
+        // Show message if user is not logged in
+        accountContent.innerHTML = `
+          <div class="not-logged-in">
+            <h2>You're not logged in</h2>
+            <p>Please sign up or log in to view your account details.</p>
+            <div class="actions" style="justify-content: center; margin-top: 30px;">
+              <a href="signup.html" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i> Sign Up
+              </a>
+              <a href="login.html" class="btn btn-outline">
+                <i class="fas fa-sign-in-alt"></i> Log In
+              </a>
+          </div>
+        `;
+        return;
+      }
+      
+      // Format the signup date
+      const signupDate = new Date(user.signupDate);
+      const formattedDate = signupDate.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      
+      accountContent.innerHTML = `
+        <div class="account-details">
+          <div class="detail-card">
+            <div class="detail-icon">
+              <i class="fas fa-user"></i>
+            </div>
+            <div class="detail-content">
+              <h3>Username</h3>
+              <p>${user.username}</p>
+            </div>
+          </div>
+          
+          <div class="detail-card">
+            <div class="detail-icon">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <div class="detail-content">
+              <h3>Email</h3>
+              <p>${user.email}</p>
+            </div>
+          </div>
+          
+          <div class="detail-card">
+            <div class="detail-icon">
+              <i class="fas fa-calendar-alt"></i>
+            </div>
+            <div class="detail-content">
+              <h3>Member Since</h3>
+              <p>${formattedDate}</p>
+            </div>
+          </div>
+          
+          <div class="detail-card">
+            <div class="detail-icon">
+              <i class="fas fa-user-shield"></i>
+            </div>
+            <div class="detail-content">
+              <h3>Account Type</h3>
+              <p>${user.isAdmin ? 'Administrator' : 'Standard User'}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="account-actions">
+          <button id="logoutBtn" class="btn btn-danger">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+        </div>
+      `;
+      
+      // Add event listener for logout button
+      document.getElementById('logoutBtn').addEventListener('click', function() {
+        handleLogout();
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get user data from localStorage
+      const userData = JSON.parse(localStorage.getItem('userData'));
+      const loadingIndicator = document.getElementById('loadingIndicator');
+      const accountContent = document.getElementById('accountContent');
+      
+      // Hide loading indicator after a short delay
+      setTimeout(() => {
+        if (loadingIndicator) loadingIndicator.style.display = 'none';
+        
+        if (userData) {
+          // Format the signup date
+          const signupDate = new Date(userData.signupDate || new Date());
+          const formattedDate = signupDate.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          });
+          
+          // Create user info HTML
+          const userInfoHTML = `
+            <div class="user-info">
+              <div class="info-item">
+                <i class="fas fa-user"></i>
+                <span><strong>Username:</strong> ${userData.username}</span>
+              </div>
+              <div class="info-item">
+                <i class="fas fa-envelope"></i>
+                <span><strong>Email:</strong> ${userData.email}</span>
+              </div>
+              <div class="info-item">
+                <i class="fas fa-user-shield"></i>
+                <span><strong>Account Type:</strong> ${userData.isAdmin ? 'Administrator' : 'Standard User'}</span>
+              </div>
+              <div class="info-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span><strong>Member Since:</strong> ${formattedDate}</span>
+              </div>
+            </div>
+            <div class="actions">
+              <a href="index.html" class="btn btn-primary">
+                <i class="fas fa-home"></i> Back to Home
+              </a>
+              ${userData.isAdmin ? `
+                <a href="admin.html" class="btn btn-outline">
+                  <i class="fas fa-tachometer-alt"></i> Admin Dashboard
+                </a>
+              ` : ''}
+              <button id="signOutBtn" class="btn btn-outline">
+                <i class="fas fa-sign-out-alt"></i> Sign Out
+              </button>
+            </div>
+          `;
+          
+          accountContent.innerHTML = userInfoHTML;
+        } else {
+          // Show message if user is not logged in
+          accountContent.innerHTML = `
+            <div class="not-logged-in">
+              <h2>You're not logged in</h2>
+              <p>Please sign up or log in to view your account details.</p>
+              <div class="actions" style="justify-content: center; margin-top: 30px;">
+                <a href="signup.html" class="btn btn-primary">
+                  <i class="fas fa-user-plus"></i> Sign Up
+                </a>
+                <a href="login.html" class="btn btn-outline">
+                  <i class="fas fa-sign-in-alt"></i> Log In
+                </a>
+              </div>
+            </div>
+          `;
+        }
+      }, 800); // 800ms delay to show loading animation
+    });
+
+    // Add sign out functionality
+    document.addEventListener('click', function(e) {
+      if (e.target && e.target.id === 'signOutBtn') {
+        // Clear all user session data
+        sessionStorage.clear();
+        
+        // Clear user data from localStorage
+        localStorage.removeItem('userData');
+        
+        // Show sign-out message
+        const accountContent = document.getElementById('accountContent');
+        accountContent.innerHTML = `
+          <div class="not-logged-in">
+            <h2>Signed Out Successfully</h2>
+            <p>You have been successfully signed out of your account.</p>
+            <div class="actions" style="justify-content: center; margin-top: 30px;">
+              <a href="index.html" class="btn btn-primary">
+                <i class="fas fa-home"></i> Back to Home
+              </a>
+              <a href="signup.html" class="btn btn-outline">
+                <i class="fas fa-sign-in-alt"></i> Sign In Again
+              </a>
+            </div>
+          </div>
+        `;
+        
+        // Redirect to home page after a short delay
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 2000);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch Videos | StudyHub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --primary-dark: #5549FF;
+            --dark: #1A1A2E;
+            --light: #F8F9FA;
+            --gray: #6C757D;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: #f5f7fa;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .header h1 {
+            color: var(--primary);
+            margin: 0;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .batch-info {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .batch-info h2 {
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .video-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-info {
+            padding: 1.25rem;
+        }
+
+        .video-info h3 {
+            margin: 0 0 0.5rem 0;
+            color: var(--dark);
+        }
+
+        .video-info p {
+            margin: 0;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--gray);
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 768px) {
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Batch Videos</h1>
+            <a href="collaborate.html" class="btn">
+                <i class="fas fa-arrow-left"></i> Back to Batches
+            </a>
+        </div>
+        
+        <div class="batch-info">
+            <h2 id="batchTitle">Loading...</h2>
+            <p id="batchDescription"></p>
+        </div>
+        
+        <div class="video-grid" id="videosContainer">
+            <!-- Videos will be loaded here -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get batch ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const batchId = urlParams.get('id');
+            
+            if (!batchId) {
+                showError('No batch ID provided');
+                return;
+            }
+            
+            // Find the batch in localStorage
+            const savedBatches = JSON.parse(localStorage.getItem('studyhub_batches') || '[]');
+            const batch = savedBatches.find(b => b.id === batchId);
+            
+            if (!batch) {
+                showError('Batch not found');
+                return;
+            }
+            
+            // Check if user has joined this batch with correct credentials
+            const joinedBatches = JSON.parse(localStorage.getItem('studyhub_joined_batches') || '[]');
+            const batchAccess = joinedBatches.find(jb => jb.id === batchId);
+            
+            if (!batchAccess) {
+                showError('You need to join this batch first to view its videos', true);
+                return;
+            }
+            
+            // Verify the stored credentials match the batch
+            if (batchAccess.schoolName.toLowerCase() !== batch.schoolName.toLowerCase() || 
+                batchAccess.className.toString().toLowerCase() !== batch.className.toString().toLowerCase()) {
+                showError('Access denied. Please join this batch with correct credentials.', true);
+                return;
+            }
+            
+            // Update batch info
+            document.getElementById('batchTitle').textContent = `${batch.schoolName} - Class ${batch.className}`;
+            
+            // Display videos
+            const videosContainer = document.getElementById('videosContainer');
+            
+            if (!batch.videos || batch.videos.length === 0) {
+                videosContainer.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-video-slash" style="font-size: 3rem; margin-bottom: 1rem; color: #ccc;"></i>
+                        <h3>No videos available</h3>
+                        <p>This batch doesn't have any videos yet.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Function to format file size
+            function formatFileSize(bytes) {
+                if (!bytes) return 'N/A';
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+            
+            // Function to render videos
+            function renderVideos(videos) {
+                if (!videos || videos.length === 0) {
+                    videosContainer.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-video-slash" style="font-size: 3rem; margin-bottom: 1rem; color: #ccc;"></i>
+                            <h3>No videos available</h3>
+                            <p>This batch doesn't have any videos yet.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                videosContainer.innerHTML = videos.map(video => {
+                    if (video.type === 'local' || video.type === 'file') {
+                        // Handle local videos from video storage
+                        let videoUrl = '';
+                        
+                        // Check if video URL is in the format 'local:videoId' or a direct data URL
+                        if (video.url && video.url.startsWith('local:')) {
+                            const videoId = video.url.split(':')[1];
+                            try {
+                                const videoData = JSON.parse(localStorage.getItem(`studyhub_video_${videoId}`));
+                                if (videoData && videoData.data) {
+                                    videoUrl = `data:${videoData.type};base64,${videoData.data}`;
+                                } else {
+                                    console.warn('Video data not found in localStorage for ID:', videoId);
+                                    videoUrl = '';
+                                }
+                            } catch (e) {
+                                console.error('Error loading video from localStorage:', e);
+                                videoUrl = '';
+                            }
+                        } else if (video.url && video.url.startsWith('data:')) {
+                            // Direct data URL
+                            videoUrl = video.url;
+                        }
+                        
+                        if (!videoUrl) {
+                            return `
+                                <div class="video-card">
+                                    <div class="video-container" style="background: #f5f5f5; display: flex; align-items: center; justify-content: center;">
+                                        <div style="text-align: center; padding: 20px;">
+                                            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; color: #ff9800; margin-bottom: 10px;"></i>
+                                            <p>Video not found or could not be loaded</p>
+                                        </div>
+                                    </div>
+                                    <div class="video-info">
+                                        <h3>${video.title || 'Unavailable Video'}</h3>
+                                        ${video.description ? `<p>${video.description}</p>` : ''}
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        
+                        return `
+                            <div class="video-card">
+                                <div class="video-container">
+                                    <video controls style="width: 100%; height: 100%;">
+                                        <source src="${videoUrl}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                                <div class="video-info">
+                                    <h3>${video.title || 'Local Video'}</h3>
+                                    ${video.description ? `<p>${video.description}</p>` : ''}
+                                    <p class="video-meta">
+                                        ${video.size || video.fileSize ? `Size: ${formatFileSize(video.size || video.fileSize)} • ` : ''}
+                                        Added: ${new Date(video.addedAt || Date.now()).toLocaleDateString()}
+                                    </p>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        // Display embedded video (YouTube/Vimeo)
+                        return `
+                            <div class="video-card">
+                                <div class="video-container">
+                                    <iframe 
+                                        src="${getEmbedUrl(video.url)}" 
+                                        frameborder="0" 
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                        allowfullscreen>
+                                    </iframe>
+                                </div>
+                                <div class="video-info">
+                                    <h3>${video.title || 'Untitled Video'}</h3>
+                                    ${video.description ? `<p>${video.description}</p>` : ''}
+                                    <p class="video-meta">
+                                        Added: ${new Date(video.addedAt || Date.now()).toLocaleDateString()}
+                                    </p>
+                                </div>
+                            </div>
+                        `;
+                    }
+                }).join('');
+            }
+            
+            // Load video-storage.js and then render videos
+            if (typeof videoStorage === 'undefined') {
+                const script = document.createElement('script');
+                script.src = 'js/video-storage.js';
+                script.onload = function() {
+                    renderVideos(batch.videos);
+                };
+                script.onerror = function() {
+                    console.error('Failed to load video-storage.js');
+                    renderVideos(batch.videos); // Try to render anyway
+                };
+                document.head.appendChild(script);
+            } else {
+                renderVideos(batch.videos);
+            }
+        });
+        
+        // Helper function to convert YouTube URL to embed URL
+        function getEmbedUrl(url) {
+            if (!url) return '';
+            
+            // Handle YouTube URLs
+            if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+                const match = url.match(regExp);
+                const videoId = (match && match[2].length === 11) ? match[2] : null;
+                
+                if (videoId) {
+                    return `https://www.youtube.com/embed/${videoId}?rel=0&showinfo=0`;
+                }
+            }
+            
+            // Handle Vimeo URLs
+            if (url.includes('vimeo.com')) {
+                const regExp = /vimeo\.com\/(\d+)/;
+                const match = url.match(regExp);
+                
+                if (match && match[1]) {
+                    return `https://player.vimeo.com/video/${match[1]}`;
+                }
+            }
+            
+            // Return original URL if no specific handling
+            return url;
+        }
+        
+        function showError(message, showJoinButton = false) {
+            const container = document.querySelector('.container');
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-exclamation-circle" style="font-size: 3rem; margin-bottom: 1rem; color: #dc3545;"></i>
+                    <h3>${showJoinButton ? 'Access Denied' : 'Error'}</h3>
+                    <p>${message}</p>
+                    <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem;">
+                        <a href="collaborate.html" class="btn">
+                            <i class="fas fa-arrow-left"></i> Back to Batches
+                        </a>
+                        ${showJoinButton ? `
+                            <a href="collaborate.html" class="btn" style="background: #28a745;">
+                                <i class="fas fa-sign-in-alt"></i> Join Batch
+                            </a>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

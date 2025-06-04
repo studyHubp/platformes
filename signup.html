@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Your Account | StudyHub</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary: #6C63FF;
+      --primary-dark: #5549FF;
+      --secondary: #4CAF50;
+      --error: #ff3860;
+      --success: #09c372;
+      --text: #333;
+      --light-gray: #f5f5f5;
+      --border: #e0e0e0;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .back-button-container {
+      position: absolute;
+      top: 30px;
+      left: 30px;
+      z-index: 10;
+    }
+    
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 20px 10px 15px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .back-button i {
+      margin-right: 8px;
+      transition: transform 0.3s ease;
+    }
+    
+    .back-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(108, 99, 255, 0.4);
+    }
+    
+    .back-button:hover i {
+      transform: translateX(-3px);
+    }
+
+    .signup-container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      width: 100%;
+      max-width: 480px;
+      padding: 50px;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .signup-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .signup-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .signup-header h1 {
+      color: var(--primary);
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .signup-header p {
+      color: #666;
+      font-size: 1rem;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .form-group i {
+      position: absolute;
+      left: 15px;
+      top: 38px;
+      color: #999;
+      font-size: 1.1rem;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 15px 15px 15px 45px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background-color: #f9f9f9;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+      background-color: white;
+      box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+      outline: none;
+    }
+
+    .form-control::placeholder {
+      color: #aaa;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(108, 99, 255, 0.4);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .form-footer {
+      text-align: center;
+      margin-top: 25px;
+      color: #666;
+    }
+
+    .form-footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .form-footer a:hover {
+      color: var(--primary-dark);
+      text-decoration: underline;
+    }
+
+    .error-message {
+      color: var(--error);
+      font-size: 0.85rem;
+      margin-top: 5px;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .success-message {
+      color: var(--success);
+      font-size: 1rem;
+      text-align: center;
+      margin-top: 20px;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .input-error {
+      border-color: var(--error) !important;
+    }
+
+    .input-success {
+      border-color: var(--success) !important;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 576px) {
+      .signup-container {
+        padding: 30px 20px;
+      }
+      
+      .signup-header h1 {
+        font-size: 1.8rem;
+      }
+      
+      .back-button {
+        padding: 8px 15px 8px 12px;
+        font-size: 14px;
+      }
+    }
+  </style>
+  </style>
+</head>
+<body>
+  <!-- Back Button -->
+  <div class="back-button-container">
+    <a href="index.html" class="back-button">
+      <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+  </div>
+
+  <div class="signup-container">
+    <div class="signup-header">
+      <h1>Create Account</h1>
+      <p>Join StudyHub and boost your learning experience</p>
+    </div>
+    
+    <form id="signupForm" novalidate>
+      <div class="form-group">
+        <i class="fas fa-user"></i>
+        <input type="text" id="username" class="form-control" placeholder="Username" required>
+        <div class="error-message" id="usernameError">Please enter a valid username</div>
+      </div>
+      
+      <div class="form-group">
+        <i class="fas fa-envelope"></i>
+        <input type="email" id="email" class="form-control" placeholder="Email address" required>
+        <div class="error-message" id="emailError">Please enter a valid email address</div>
+      </div>
+      
+      <div class="form-group">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="password" class="form-control" placeholder="Create password" required>
+        <div class="error-message" id="passwordError">Password must be at least 6 characters</div>
+      </div>
+      
+      <div class="form-group">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm password" required>
+        <div class="error-message" id="confirmPasswordError">Passwords do not match</div>
+      </div>
+      
+      <button type="submit" class="btn">
+        <span class="btn-text">Create Account</span>
+      </button>
+      
+      <div class="success-message" id="successMessage">
+        <i class="fas fa-check-circle"></i> Registration successful! Redirecting...
+      </div>
+      
+      <div class="form-footer">
+        Already have an account? <a href="#">Sign in</a>
+      </div>
+    </form>
+    <script src="js/auth.js"></script>
+    <script src="script.js"></script>
+    <script src="js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('signupForm');
+      const usernameInput = document.getElementById('username');
+      const emailInput = document.getElementById('email');
+      const passwordInput = document.getElementById('password');
+      const confirmPasswordInput = document.getElementById('confirmPassword');
+
+      // Show error message for an input
+      function showError(input, message) {
+        const formGroup = input.parentElement;
+        const errorMessage = formGroup.querySelector('.error-message');
+        input.classList.add('input-error');
+        input.classList.remove('input-success');
+        errorMessage.textContent = message;
+        errorMessage.style.display = 'block';
+      }
+
+      // Show success state for an input
+      function showSuccess(input) {
+        const formGroup = input.parentElement;
+        const errorMessage = formGroup.querySelector('.error-message');
+        input.classList.remove('input-error');
+        input.classList.add('input-success');
+        errorMessage.style.display = 'none';
+      }
+      
+      // Check if email is valid
+      function isValidEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+      }
+      
+      // Validate form on submit
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        let isValid = true;
+        
+        // Reset all error states
+        document.querySelectorAll('.error-message').forEach(el => {
+          el.style.display = 'none';
+        });
+        
+        document.querySelectorAll('.form-control').forEach(input => {
+          input.classList.remove('input-error', 'input-success');
+        });
+        
+        // Validate username
+        if (usernameInput.value.trim() === '') {
+          showError(usernameInput, 'Username is required');
+          isValid = false;
+        } else if (usernameInput.value.trim().length < 3) {
+          showError(usernameInput, 'Username must be at least 3 characters');
+          isValid = false;
+        } else {
+          showSuccess(usernameInput);
+        }
+        
+        // Validate email
+        if (emailInput.value.trim() === '') {
+          showError(emailInput, 'Email is required');
+          isValid = false;
+        } else if (!isValidEmail(emailInput.value.trim())) {
+          showError(emailInput, 'Please enter a valid email');
+          isValid = false;
+        } else {
+          showSuccess(emailInput);
+        }
+        
+        // Validate password
+        if (passwordInput.value === '') {
+          showError(passwordInput, 'Password is required');
+          isValid = false;
+        } else if (passwordInput.value.length < 6) {
+          showError(passwordInput, 'Password must be at least 6 characters');
+          isValid = false;
+        } else {
+          showSuccess(passwordInput);
+        }
+        
+        // Validate confirm password
+        if (confirmPasswordInput.value === '') {
+          showError(confirmPasswordInput, 'Please confirm your password');
+          isValid = false;
+        } else if (confirmPasswordInput.value !== passwordInput.value) {
+          showError(confirmPasswordInput, 'Passwords do not match');
+          isValid = false;
+        } else {
+          showSuccess(confirmPasswordInput);
+        }
+        
+        // If form is valid, process the form
+        if (isValid) {
+          const successMessage = document.getElementById('successMessage');
+          successMessage.style.display = 'block';
+          
+          // Check if the credentials match the admin account
+          const username = usernameInput.value.trim();
+          const email = emailInput.value.trim();
+          const password = passwordInput.value;
+          
+          // Admin credentials
+          const ADMIN_USERNAME = 'mayur_48l6';
+          const ADMIN_EMAIL = 'mayur48l6@gmail.com';
+          const ADMIN_PASSWORD = 'mayur48l6';
+          
+          // In a real app, you would submit the form to a server here
+          // For demo purposes, we'll check for admin credentials and redirect accordingly
+          
+          if (username === ADMIN_USERNAME && email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+            // Store admin data in session storage
+            const adminData = {
+              username: username,
+              email: email,
+              isAdmin: true
+            };
+            sessionStorage.setItem('adminUserData', JSON.stringify(adminData));
+            
+            // Redirect to admin page after a short delay
+            setTimeout(() => {
+              window.location.href = 'admin.html';
+            }, 1000);
+          } else {
+            // Create user data object
+            const userData = {
+              id: Date.now(), // Simple unique ID
+              username: username,
+              email: email,
+              isAdmin: false,
+              signupDate: new Date().toISOString()
+            };
+            
+            // Store user data and handle login
+            handleLogin(userData);
+            
+            // Reset form and show success message
+            form.reset();
+            successMessage.style.display = 'none';
+          }
+        }
+      });
+      
+      // Real-time validation
+      usernameInput.addEventListener('input', function() {
+        if (this.value.trim() === '') {
+          showError(this, 'Username is required');
+        } else if (this.value.trim().length < 3) {
+          showError(this, 'Username must be at least 3 characters');
+        } else {
+          showSuccess(this);
+        }
+      });
+      
+      emailInput.addEventListener('input', function() {
+        if (this.value.trim() === '') {
+          showError(this, 'Email is required');
+        } else if (!isValidEmail(this.value.trim())) {
+          showError(this, 'Please enter a valid email');
+        } else {
+          showSuccess(this);
+        }
+      });
+      
+      passwordInput.addEventListener('input', function() {
+        if (this.value === '') {
+          showError(this, 'Password is required');
+        } else if (this.value.length < 6) {
+          showError(this, 'Password must be at least 6 characters');
+        } else {
+          showSuccess(this);
+        }
+      });
+      
+      confirmPasswordInput.addEventListener('input', function() {
+        if (this.value === '') {
+          showError(this, 'Please confirm your password');
+        } else if (this.value !== passwordInput.value) {
+          showError(this, 'Passwords do not match');
+        } else {
+          showSuccess(this);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

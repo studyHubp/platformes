@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Materials - StudyMate</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* Back Button Styles */
+        .back-button-container {
+            max-width: 1200px;
+            margin: 20px auto 0;
+            padding: 0 20px;
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            background-color: #6C63FF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            margin-bottom: 20px;
+        }
+        
+        .back-button:hover {
+            background-color: #5549FF;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .back-button i {
+            margin-right: 8px;
+        }
+        
+        .materials-container {
+            padding: 1rem 5%;
+            margin-top: 60px;
+        }
+
+        .materials-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .upload-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .materials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .material-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .material-subject {
+            color: var(--primary-color);
+            font-size: 0.8rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .material-title {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .material-description {
+            color: #666;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .material-meta {
+            font-size: 0.75rem;
+            color: #999;
+        }
+
+        .download-btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .subject-filter {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .subject-btn {
+            background: none;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .subject-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Upload Modal */
+        .upload-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .upload-modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 1.5rem;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 1rem;
+            top: 0.5rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #aaa;
+        }
+
+        .upload-form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .form-group textarea {
+            height: 60px;
+            resize: vertical;
+        }
+
+        #file-name {
+            margin-top: 0.3rem;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.6rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Back Button -->
+    <div class="back-button-container">
+        <a href="index.html" class="back-button">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+    </div>
+    
+    <nav class="navbar">
+        <div class="logo">StudyHub</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="materials.html" class="active">Materials</a>
+            <a href="quizzes.html">Quizzes</a>
+            <a href="study_plan.html">Plans</a>
+            
+        </div>
+    </nav>
+
+    <main class="materials-container">
+        <div class="materials-header">
+            <h2>Study Materials</h2>
+            <button class="upload-btn" id="upload-btn">+ Upload</button>
+        </div>
+
+        <div class="subject-filter">
+            <button class="subject-btn active" data-subject="all">All</button>
+            <button class="subject-btn" data-subject="Mathematics">Math</button>
+            <button class="subject-btn" data-subject="Physics">Physics</button>
+            <button class="subject-btn" data-subject="Chemistry">Chemistry</button>
+            <button class="subject-btn" data-subject="Biology">Biology</button>
+            <button class="subject-btn" data-subject="Computer Science">CS</button>
+        </div>
+
+        <div class="materials-grid" id="materials-grid">
+            <!-- Materials will be loaded here -->
+        </div>
+    </main>
+
+    <!-- Upload Modal -->
+    <div id="upload-modal" class="upload-modal">
+        <div class="upload-modal-content">
+            <span class="close">&times;</span>
+            <h3>Upload Material</h3>
+            <form id="upload-form" class="upload-form">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <select id="subject" required>
+                        <option value="">Select subject</option>
+                        <option value="Mathematics">Mathematics</option>
+                        <option value="Physics">Physics</option>
+                        <option value="Chemistry">Chemistry</option>
+                        <option value="Biology">Biology</option>
+                        <option value="Computer Science">Computer Science</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description (optional)</label>
+                    <textarea id="description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="file">File (PDF, DOC, DOCX, JPG, PNG - Max 10MB)</label>
+                    <input type="file" id="file" required accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                    <div id="file-name"></div>
+                </div>
+                <button type="submit" class="submit-btn">Upload</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // DOM elements
+        const materialsGrid = document.getElementById('materials-grid');
+        const uploadBtn = document.getElementById('upload-btn');
+        const uploadModal = document.getElementById('upload-modal');
+        const closeBtn = uploadModal.querySelector('.close');
+        const uploadForm = document.getElementById('upload-form');
+        const fileInput = document.getElementById('file');
+        const fileName = document.getElementById('file-name');
+        const subjectButtons = document.querySelectorAll('.subject-btn');
+
+        // Show file name
+        fileInput.addEventListener('change', () => {
+            fileName.textContent = fileInput.files[0] ? fileInput.files[0].name : '';
+        });
+
+        // Modal handling
+        uploadBtn.addEventListener('click', () => uploadModal.style.display = 'block');
+        closeBtn.addEventListener('click', () => uploadModal.style.display = 'none');
+        window.addEventListener('click', (e) => {
+            if (e.target === uploadModal) uploadModal.style.display = 'none';
+        });
+
+        // Handle upload
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData();
+            formData.append('title', document.getElementById('title').value);
+            formData.async function name(params) {
+                append
+            }('subject', document.getElementById('subject').value);
+            formData.append('description', document.getElementById('description').value);
+            formData.append('file', fileInput.files[0]);
+            formData.append('userId', '1'); // Replace with actual user ID after authentication
+
+            try {
+                const response = await fetch('http://localhost:3000/api/materials/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Upload failed');
+
+                alert('Upload successful!');
+                uploadModal.style.display = 'none';
+                uploadForm.reset();
+                fileName.textContent = '';
+                loadMaterials();
+            } catch (error) {
+                alert(error.message || 'Error uploading material');
+            }
+        });
+
+        // Load materials
+        async function loadMaterials(subject = 'all') {
+            try {
+                const url = subject === 'all' 
+                    ? 'http://localhost:3000/api/materials'
+                    : `http://localhost:3000/api/materials/subject/${encodeURIComponent(subject)}`;
+
+                const response = await fetch(url);
+                const materials = await response.json();
+
+                materialsGrid.innerHTML = materials.map(material => `
+                    <div class="material-card">
+                        <div class="material-subject">${material.subject}</div>
+                        <h3 class="material-title">${material.title}</h3>
+                        <p class="material-description">${material.description || ''}</p>
+                        <div class="material-meta">
+                            <div>By ${material.uploader_name}</div>
+                            <div>${new Date(material.upload_date).toLocaleDateString()}</div>
+                        </div>
+                        <a href="http://localhost:3000/${material.file_path}" class="download-btn" download>Download</a>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error:', error);
+                materialsGrid.innerHTML = '<p>Error loading materials. Please try again.</p>';
+            }
+        }
+
+        // Subject filter
+        subjectButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                subjectButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                loadMaterials(button.dataset.subject);
+            });
+        });
+
+        // Initial load
+        loadMaterials();
+    </script>
+</body>
+</html>
